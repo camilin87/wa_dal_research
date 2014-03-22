@@ -7,10 +7,22 @@
 # > sudo apt-get install redis-server
 # > sudo pip install redis
 
-import redis
+from datetime import datetime
+from datetime import timedelta
 
-r = redis.StrictRedis(host="localhost", port=6379, db=0)
+def main():
+    for day in _get_days(3):
+        for hour in _get_hours(24):
+            print day, hour
 
-r.set("foo", "bar")
+def _get_days(max_days):
+    for day_inc in xrange(-max_days, 0):        
+        adjusted_date = datetime.utcnow() + timedelta(days=day_inc)
+        yield adjusted_date.strftime("%m-%d-%Y")
 
-print r.get("foo")
+def _get_hours(max_hour):
+    for hour in xrange(0, max_hour):
+        yield hour
+
+if __name__ == "__main__":
+    main()
