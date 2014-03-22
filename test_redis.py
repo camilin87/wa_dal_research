@@ -13,10 +13,11 @@ from datetime import timedelta
 def main():
     for day in _get_days(3):
         for hour in _get_hours(24):
-            for latitude in _get_latitudes(1000):
-                print day, hour, latitude
+            for latitude in _get_coordinate_component(80):
+                for longitude in _get_coordinate_component(500):
+                    print day, hour, latitude, longitude
 
-def _get_latitudes(max_count):
+def _get_coordinate_component(max_count):
     for i in range(0, max_count):
         yield "{0:.2f}".format(i / 100.0)
 
