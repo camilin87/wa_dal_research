@@ -16,12 +16,17 @@ def main():
             for latitude in _get_coordinate_component(80):
                 for longitude in _get_coordinate_component(500):
                     print (
-                        day, hour, latitude, longitude,
+                        _get_key(day, hour, latitude, longitude),
                         _get_liquid_precipitation_inches(),
                         _get_pop12_percent(),
                         _get_snow_inches(),
                         _get_apparent_temperature()
                     )
+
+def _get_key(date, hour, latitude, longitude):
+    return "{0}|{1}|{2}|{3}".format(
+            date, hour, latitude, longitude
+        )
 
 def _get_liquid_precipitation_inches():
     return 0.0
