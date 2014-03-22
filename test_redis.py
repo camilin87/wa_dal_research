@@ -15,7 +15,25 @@ def main():
         for hour in _get_hours(24):
             for latitude in _get_coordinate_component(80):
                 for longitude in _get_coordinate_component(500):
-                    print day, hour, latitude, longitude
+                    print (
+                        day, hour, latitude, longitude,
+                        _get_liquid_precipitation_inches(),
+                        _get_pop12_percent(),
+                        _get_snow_inches(),
+                        _get_apparent_temperature()
+                    )
+
+def _get_liquid_precipitation_inches():
+    return 0.0
+
+def _get_pop12_percent():
+    return 21.0
+
+def _get_snow_inches():
+    return 0.0
+
+def _get_apparent_temperature():
+    return 55.0
 
 def _get_coordinate_component(max_count):
     for i in range(0, max_count):
