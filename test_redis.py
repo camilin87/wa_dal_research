@@ -9,22 +9,29 @@
 
 from datetime import datetime
 from datetime import timedelta
+import redis
 
 def main():
+    rdb = redis.StrictRedis()
+
     for day in _get_days(3):
-        for hour in _get_hours(24):
-            for latitude in _get_coordinate_component(80):
-                for longitude in _get_coordinate_component(500):
-                    print (
-                        _get_key(day, hour, latitude, longitude),
-                        _get_liquid_precipitation_inches(),
-                        _get_pop12_percent(),
-                        _get_snow_inches(),
-                        _get_apparent_temperature()
-                    )
+        for hour in _get_hours(1):
+            for latitude in _get_coordinate_component(2):
+                for longitude in _get_coordinate_component(1):
+                    key_str = _get_key(day, hour, latitude, longitude)
+                    rdb.hmset(key_str, _get_value())
+                    print key_str
+
+def _get_value():
+    return {
+        "liquid_precipitation_inches": _get_liquid_precipitation_inches(),
+        "pop12_percent": _get_pop12_percent(),
+        "snow_inches": _get_snow_inches(),
+        "apparent_temperature_f": _get_apparent_temperature()
+    }
 
 def _get_key(date, hour, latitude, longitude):
-    return "{0}|{1}|{2}|{3}".format(
+    return "location_data:" + "{0}|{1}|{2}|{3}".format(
             date, hour, latitude, longitude
         )
 
