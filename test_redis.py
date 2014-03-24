@@ -12,6 +12,7 @@ from datetime import timedelta
 import redis
 
 def main():
+    expiration_seconds = 3 * 24 * 60 * 60
     rdb = redis.StrictRedis()
 
     for day in _get_days(3):
@@ -19,7 +20,12 @@ def main():
             for latitude in _get_coordinate_component(2):
                 for longitude in _get_coordinate_component(1):
                     key_str = _get_key(day, hour, latitude, longitude)
-                    rdb.hmset(key_str, _get_value())
+
+                    rpipe = rdb.pipeline()
+                    rpipe.hmset(key_str, _get_value())
+                    rpipe.expire(key_str, expiration_seconds)
+                    rpipe.execute()
+
                     print key_str
 
 def _get_value():
