@@ -12,21 +12,25 @@ from datetime import timedelta
 import redis
 
 def main():
-    expiration = 3 * 24 * 60 * 60
+    days_count = 3
+    hours_count = 24
+    latitudes_count = 800
+    longitudes_count = 50
+    total = days_count * hours_count * longitudes_count * latitudes_count
+    current = 0
+
+    expiration = days_count * hours_count * 60 * 60
     rdb = redis.StrictRedis()
     rpipe = rdb.pipeline()
 
-    total = 3 * 24 * 50 * 800
-    current = 0
-
-    for day in _get_days(3):
-        for hour in _get_hours(24):
-            for latitude in _get_coordinate_component(50):
-                for longitude in _get_coordinate_component(800):
+    for day in _get_days(days_count):
+        for hour in _get_hours(hours_count):
+            for latitude in _get_coordinate_component(longitudes_count):
+                for longitude in _get_coordinate_component(latitudes_count):
                     key_str = _get_key(day, hour, latitude, longitude)
                     rpipe.hmset(key_str, _get_value()).expire(key_str, expiration).execute()
 
-                current += 800
+                current += latitudes_count
                 percent = current * 100.0 / total
                 print percent, "% ", key_str
 
