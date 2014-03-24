@@ -32,7 +32,8 @@ def main():
 
                 current += latitudes_count
                 percent = current * 100.0 / total
-                print percent, "% ", key_str
+                line_str = "{0:.2f}% {1}".format(percent, key_str)
+                print line_str
 
 def _get_value():
     return {
