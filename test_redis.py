@@ -16,15 +16,19 @@ def main():
     rdb = redis.StrictRedis()
     rpipe = rdb.pipeline()
 
-    for day in _get_days(3):
-        for hour in _get_hours(1):
-            for latitude in _get_coordinate_component(2):
-                for longitude in _get_coordinate_component(1):
-                    key_str = _get_key(day, hour, latitude, longitude)
+    total = 3 * 24 * 50 * 800
+    current = 0
 
+    for day in _get_days(3):
+        for hour in _get_hours(24):
+            for latitude in _get_coordinate_component(50):
+                for longitude in _get_coordinate_component(800):
+                    key_str = _get_key(day, hour, latitude, longitude)
                     rpipe.hmset(key_str, _get_value()).expire(key_str, expiration).execute()
 
-                    print key_str
+                current += 800
+                percent = current * 100.0 / total
+                print percent, "% ", key_str
 
 def _get_value():
     return {
