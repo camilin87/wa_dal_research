@@ -33,7 +33,10 @@ def main():
                 current += latitudes_count
                 percent = current * 100.0 / total
                 line_str = "{0:.2f}% {1}".format(percent, key_str)
-                print line_str
+                _log_progress(line_str)
+
+def _log_progress(line_str):
+    print line_str
 
 def _get_value():
     return {
