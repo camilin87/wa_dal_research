@@ -15,8 +15,8 @@ from datetime import timedelta
 import redis
 
 def main():
-    days_count = 3
-    hours_count = 24
+    days_count = 4
+    hours_count = 12
     latitudes_count = 50
     longitudes_count = 800
     total = days_count * hours_count * latitudes_count * longitudes_count
