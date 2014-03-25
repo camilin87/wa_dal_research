@@ -16,10 +16,10 @@ import redis
 
 def main():
     days_count = 3
-    hours_count = 12
-    latitudes_count = 800
-    longitudes_count = 50
-    total = days_count * hours_count * longitudes_count * latitudes_count
+    hours_count = 24
+    latitudes_count = 50
+    longitudes_count = 800
+    total = days_count * hours_count * latitudes_count * longitudes_count
     current = 0
 
     expiration = days_count * hours_count * 60 * 60
@@ -28,12 +28,12 @@ def main():
 
     for day in _get_days(days_count):
         for hour in _get_hours(hours_count):
-            for latitude in _get_coordinate_component(longitudes_count):
-                for longitude in _get_coordinate_component(latitudes_count):
-                    key_str = _get_key(day, hour, latitude, longitude)
-                    rpipe.hmset(key_str, _get_value()).expire(key_str, expiration).execute()
+            for latitude in _get_coordinate_component(latitudes_count):
+                for longitude in _get_coordinate_component(longitudes_count):
+                    key_str = _get_key(day, latitude, longitude)
+                    rpipe.hmset(key_str, _get_value(hour)).expire(key_str, expiration).execute()
 
-                current += latitudes_count
+                current += longitudes_count
                 percent = current * 100.0 / total
                 line_str = "{0:.2f}% {1}".format(percent, key_str)
                 _log_progress(line_str)
@@ -41,17 +41,20 @@ def main():
 def _log_progress(line_str):
     print line_str
 
-def _get_value():
+def _get_value(hour):
     return {
-        "liquid_precipitation_inches": _get_liquid_precipitation_inches(),
-        "pop12_percent": _get_pop12_percent(),
-        "snow_inches": _get_snow_inches(),
-        "apparent_temperature_f": _get_apparent_temperature()
+        _format_value("liquid_precipitation_inches", hour): _get_liquid_precipitation_inches(),
+        _format_value("pop12_percent", hour): _get_pop12_percent(),
+        _format_value("snow_inches", hour): _get_snow_inches(),
+        _format_value("apparent_temperature_f", hour): _get_apparent_temperature()
     }
 
-def _get_key(date, hour, latitude, longitude):
-    return "location_data:" + "{0}|{1}|{2}|{3}".format(
-            date, hour, latitude, longitude
+def _format_value(value_name, hour):
+    return "{0}-{1}".format(value_name, hour)
+
+def _get_key(date, latitude, longitude):
+    return "location_data:" + "{0}|{1}|{2}".format(
+            date, latitude, longitude
         )
 
 def _get_liquid_precipitation_inches():
