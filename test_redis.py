@@ -7,6 +7,9 @@
 # > sudo apt-get install redis-server
 # > sudo pip install redis
 
+# sudo sh -c 'echo 1 > /proc/sys/vm/overcommit_memory'
+# sudo sed -i 's/appendonly no/appendonly yes/g' /etc/redis/redis.conf
+
 from datetime import datetime
 from datetime import timedelta
 import redis
