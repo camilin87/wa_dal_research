@@ -13,7 +13,7 @@ import redis
 
 def main():
     days_count = 3
-    hours_count = 24
+    hours_count = 12
     latitudes_count = 800
     longitudes_count = 50
     total = days_count * hours_count * longitudes_count * latitudes_count
