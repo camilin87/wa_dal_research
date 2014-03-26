@@ -53,7 +53,7 @@ def _format_value(value_name, hour):
     return "{0}-{1}".format(value_name, hour)
 
 def _get_key(date, latitude, longitude):
-    return "location_data:" + "{0}|{1}|{2}".format(
+    return "location_data:" + "{0}:{1}:{2}".format(
             date, latitude, longitude
         )
 
